@@ -29,7 +29,7 @@ func (p *PhotoRepository) Get() ([]domain.RespGetPhoto, error) {
 		return result, err
 	}
 	for r := range result {
-		err = database.Database.DB.Table("users").Where("id = ?", result[r].UserId).Where("deleted_at IS NULL").Scan(&result[r].User).Error
+		err = database.Database.DB.Table("users").Where("id = ?", result[r].UserId).Scan(&result[r].User).Error
 		if err != nil {
 			return result, err
 		}
@@ -44,7 +44,7 @@ func (p *PhotoRepository) GetById(id int) ([]domain.RespGetPhoto, error) {
 		return result, err
 	}
 	for r := range result {
-		err = database.Database.DB.Table("users").Where("id = ?", result[r].UserId).Where("deleted_at IS NULL").Scan(&result[r].User).Error
+		err = database.Database.DB.Table("users").Where("id = ?", result[r].UserId).Scan(&result[r].User).Error
 		if err != nil {
 			return result, err
 		}

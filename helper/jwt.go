@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"MyGram/repository"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-contrib/sessions"
@@ -10,6 +11,7 @@ import (
 )
 
 type Jwt struct {
+	user repository.UserRepository
 }
 
 type TokenClaim struct {
@@ -25,7 +27,7 @@ func (j *Jwt) GetToken(id uint) (token string, err error) {
 	return token, err
 }
 
-func (m *Jwt) CheckToken(s sessions.Session) (akses bool, data TokenClaim, err error) {
+func (j *Jwt) CheckToken(s sessions.Session) (akses bool, data TokenClaim, err error) {
 	tokenClaim := TokenClaim{}
 
 	if s == nil {
@@ -34,12 +36,18 @@ func (m *Jwt) CheckToken(s sessions.Session) (akses bool, data TokenClaim, err e
 
 	claims := s.Get("claims")
 	if claims == nil {
-
 		return false, tokenClaim, fmt.Errorf("Claims is empty")
 	}
 	err = mapstructure.Decode(claims, &tokenClaim)
 	if err != nil {
 		return false, tokenClaim, err
+	}
+	success, err := j.user.GetById(tokenClaim.Client_Id)
+	if err != nil {
+		return false, tokenClaim, err
+	}
+	if !success {
+		return false, tokenClaim, fmt.Errorf("User not found")
 	}
 	return true, tokenClaim, nil
 }

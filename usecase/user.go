@@ -118,7 +118,11 @@ func (u *UserUsecase) Update(c *gin.Context) {
 	akses, data, err := u.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusInternalServerError
-		response.Data = gin.H{"error": err.Error()}
+		if err.Error() == "record not found" {
+			response.Data = gin.H{"error": "You must login first"}
+		} else {
+			response.Data = gin.H{"error": err.Error()}
+		}
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
@@ -144,7 +148,11 @@ func (u *UserUsecase) Delete(c *gin.Context) {
 	akses, dataAkses, err := u.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusInternalServerError
-		response.Data = gin.H{"error": err.Error()}
+		if err.Error() == "record not found" {
+			response.Data = gin.H{"error": "You must login first"}
+		} else {
+			response.Data = gin.H{"error": err.Error()}
+		}
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}

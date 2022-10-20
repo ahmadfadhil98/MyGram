@@ -43,6 +43,15 @@ func (u *UserRepository) Login(user domain.User) (bool, domain.User, error) {
 	return true, result, err
 }
 
+func (u *UserRepository) GetById(id int64) (bool, error) {
+	result := domain.User{}
+	err := database.Database.DB.Table("users").Where("id = ?", id).Where("deleted_at IS NULL").First(&result).Error
+	if err != nil {
+		return false, err
+	}
+	return true, err
+}
+
 func (u *UserRepository) Update(user domain.User) (domain.RespUpdateUser, error) {
 	result := domain.RespUpdateUser{}
 	err := database.Database.DB.Table("users").Where("id = ?", user.ID).Where("deleted_at IS NULL").

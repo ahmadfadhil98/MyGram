@@ -27,32 +27,37 @@ func (r *Router) RouterInit() (*gin.Engine, error) {
 	{
 		router.POST("/register", r.UserUse.Register)
 		router.POST("/login", r.UserUse.Login)
-		router.Use(r.Auth.Auth)
+
+		users := router.Group("/users")
+		users.Use(r.Auth.Auth)
 		{
-			router.PUT("/users", r.UserUse.Update)
-			router.DELETE("/users", r.UserUse.Delete)
+			users.PUT("/", r.UserUse.Update)
+			users.DELETE("/", r.UserUse.Delete)
 		}
 
-		router.Use(r.Auth.Auth)
+		photos := router.Group("/photos")
+		photos.Use(r.Auth.Auth)
 		{
-			router.POST("/photos", r.PhotoUse.Create)
-			router.GET("/photos", r.PhotoUse.Get)
-			router.PUT("/photos/:photoId", r.PhotoUse.Update)
-			router.DELETE("/photos/:photoId", r.PhotoUse.Delete)
+			photos.POST("/", r.PhotoUse.Create)
+			photos.GET("/", r.PhotoUse.Get)
+			photos.PUT("/:photoId", r.PhotoUse.Update)
+			photos.DELETE("/:photoId", r.PhotoUse.Delete)
 		}
-		router.Use(r.Auth.Auth)
+		comments := router.Group("/comments")
+		comments.Use(r.Auth.Auth)
 		{
-			router.POST("/comments", r.CommentUse.Create)
-			router.GET("/comments", r.CommentUse.Get)
-			router.PUT("/comments/:commentId", r.CommentUse.Update)
-			router.DELETE("/comments/:commentId", r.CommentUse.Delete)
+			comments.POST("/", r.CommentUse.Create)
+			comments.GET("/", r.CommentUse.Get)
+			comments.PUT("/:commentId", r.CommentUse.Update)
+			comments.DELETE("/:commentId", r.CommentUse.Delete)
 		}
-		router.Use(r.Auth.Auth)
+		socmeds := router.Group("/socialmedias")
+		socmeds.Use(r.Auth.Auth)
 		{
-			router.POST("/socmed", r.SocmedUse.Create)
-			router.GET("/socmed", r.SocmedUse.Get)
-			router.PUT("/socmed/:socialMediaId", r.SocmedUse.Update)
-			router.DELETE("/socmed/:socialMediaId", r.SocmedUse.Delete)
+			socmeds.POST("/", r.SocmedUse.Create)
+			socmeds.GET("/", r.SocmedUse.Get)
+			socmeds.PUT("/:socialMediaId", r.SocmedUse.Update)
+			socmeds.DELETE("/:socialMediaId", r.SocmedUse.Delete)
 		}
 
 	}

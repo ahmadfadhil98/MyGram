@@ -36,7 +36,11 @@ func (p *PhotoUsecase) Create(c *gin.Context) {
 	akses, data, err := p.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusBadRequest
-		response.Data = gin.H{"error": err.Error()}
+		if err.Error() == "record not found" {
+			response.Data = gin.H{"error": "You must login first"}
+		} else {
+			response.Data = gin.H{"error": err.Error()}
+		}
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -62,7 +66,11 @@ func (p *PhotoUsecase) Get(c *gin.Context) {
 	akses, _, err := p.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusInternalServerError
-		response.Data = gin.H{"error": err.Error()}
+		if err.Error() == "record not found" {
+			response.Data = gin.H{"error": "You must login first"}
+		} else {
+			response.Data = gin.H{"error": err.Error()}
+		}
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
@@ -98,7 +106,11 @@ func (p *PhotoUsecase) Update(c *gin.Context) {
 	akses, data, err := p.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusInternalServerError
-		response.Data = gin.H{"error": err.Error()}
+		if err.Error() == "record not found" {
+			response.Data = gin.H{"error": "You must login first"}
+		} else {
+			response.Data = gin.H{"error": err.Error()}
+		}
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
@@ -132,7 +144,11 @@ func (p *PhotoUsecase) Delete(c *gin.Context) {
 	akses, _, err := p.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusInternalServerError
-		response.Data = gin.H{"error": err.Error()}
+		if err.Error() == "record not found" {
+			response.Data = gin.H{"error": "You must login first"}
+		} else {
+			response.Data = gin.H{"error": err.Error()}
+		}
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}

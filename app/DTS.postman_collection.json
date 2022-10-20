@@ -1,0 +1,369 @@
+{
+	"info": {
+		"_postman_id": "c1b6bd00-751c-4a29-90ca-65a58d3af45c",
+		"name": "DTS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17130511"
+	},
+	"item": [
+		{
+			"name": "MyGram",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"age\":8,\r\n    \"email\":\"ahmad@mail.com\",\r\n    \"password\":\"password\",\r\n    \"username\":\"ahmadfadhil\" \r\n}"
+						},
+						"url": {
+							"raw": "{{myGramSite}}/register",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"ahmad@mail.com\",\r\n    \"password\":\"password\"\r\n}"
+						},
+						"url": {
+							"raw": "{{myGramSite}}/login",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"ahmadfadhila@mail.com\",\r\n    \"username\" : \"ahmadfadhila\"\r\n}"
+						},
+						"url": {
+							"raw": "{{myGramSite}}/users",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{myGramSite}}/users",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Photo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"Photo1\",\r\n    \"caption\":\"Photo\",\r\n    \"photo_url\":\"www.mygram.com/photo1\"\r\n}"
+						},
+						"url": {
+							"raw": "{{myGramSite}}/photos",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"photos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Photo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{myGramSite}}/photos",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"photos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Photo",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\" : \"Dilan\",\r\n    \"caption\" : \"Dilan\",\r\n    \"photo_url\" : \"dilan.com\"\r\n}"
+						},
+						"url": {
+							"raw": "{{myGramSite}}/photos/1",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"photos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Photo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{myGramSite}}/photos/1",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"photos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Comment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\" : \"Halo\",\r\n    \"photo_id\" : 2\r\n}"
+						},
+						"url": {
+							"raw": "{{myGramSite}}/comments",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{myGramSite}}/comments",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Comment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\" : \"Daebak\"\r\n}"
+						},
+						"url": {
+							"raw": "{{myGramSite}}/comments/1",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"comments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{myGramSite}}/comments/1",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"comments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Social Media",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Dilan\",\r\n    \"social_media_url\" : \"dilan.com\"\r\n}"
+						},
+						"url": {
+							"raw": "{{myGramSite}}/socialmedias",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"socialmedias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Social Media",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{myGramSite}}/socialmedias",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"socialmedias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Social Media",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Dilantak\",\r\n    \"social_media_url\":\"bun.com\"\r\n}"
+						},
+						"url": {
+							"raw": "{{myGramSite}}/socialmedias/1",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"socialmedias",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Social Media",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{myGramSite}}/socialmedias/1",
+							"host": [
+								"{{myGramSite}}"
+							],
+							"path": [
+								"socialmedias",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOjQsImV4cCI6MTY2NjMyNzc2MX0.QqKqCfxrN_NgJIyrzMj7KkSzVcAmFq0ny4KcpToETcc",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "myGramSite",
+			"value": "localhost:8001"
+		}
+	]
+}

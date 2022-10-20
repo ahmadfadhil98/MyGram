@@ -36,7 +36,11 @@ func (s *SocialMediaUsecase) Create(c *gin.Context) {
 	akses, data, err := s.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusBadRequest
-		response.Data = gin.H{"error": err.Error()}
+		if err.Error() == "record not found" {
+			response.Data = gin.H{"error": "You must login first"}
+		} else {
+			response.Data = gin.H{"error": err.Error()}
+		}
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -62,7 +66,11 @@ func (s *SocialMediaUsecase) Get(c *gin.Context) {
 	akses, _, err := s.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusBadRequest
-		response.Data = gin.H{"error": err.Error()}
+		if err.Error() == "record not found" {
+			response.Data = gin.H{"error": "You must login first"}
+		} else {
+			response.Data = gin.H{"error": err.Error()}
+		}
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -97,7 +105,11 @@ func (s *SocialMediaUsecase) Update(c *gin.Context) {
 	akses, data, err := s.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusBadRequest
-		response.Data = gin.H{"error": err.Error()}
+		if err.Error() == "record not found" {
+			response.Data = gin.H{"error": "You must login first"}
+		} else {
+			response.Data = gin.H{"error": err.Error()}
+		}
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -125,7 +137,11 @@ func (s *SocialMediaUsecase) Delete(c *gin.Context) {
 	akses, _, err := s.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusBadRequest
-		response.Data = gin.H{"error": err.Error()}
+		if err.Error() == "record not found" {
+			response.Data = gin.H{"error": "You must login first"}
+		} else {
+			response.Data = gin.H{"error": err.Error()}
+		}
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}

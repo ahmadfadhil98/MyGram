@@ -29,11 +29,11 @@ func (c *CommentRepository) Get() ([]domain.RespGetComment, error) {
 		return result, err
 	}
 	for r := range result {
-		err = database.Database.DB.Table("users").Where("id = ?", result[r].UserId).Where("deleted_at IS NULL").Scan(&result[r].User).Error
+		err = database.Database.DB.Table("users").Where("id = ?", result[r].UserId).Scan(&result[r].User).Error
 		if err != nil {
 			return result, err
 		}
-		err = database.Database.DB.Table("photos").Where("id = ?", result[r].PhotoId).Where("deleted_at IS NULL").Scan(&result[r].Photo).Error
+		err = database.Database.DB.Table("photos").Where("id = ?", result[r].PhotoId).Scan(&result[r].Photo).Error
 		if err != nil {
 			return result, err
 		}

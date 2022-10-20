@@ -24,12 +24,12 @@ func (s *SocialMediaRepository) Create(socialMedia domain.SocialMedia) (domain.R
 
 func (s *SocialMediaRepository) Get() (domain.RespGetSocialMedia, error) {
 	result := domain.RespGetSocialMedia{}
-	err := database.Database.DB.Table("social_medias").Where("deleted_at IS NULL").Scan(&result.SocialMedias).Error
+	err := database.Database.DB.Table("social_media").Where("deleted_at IS NULL").Scan(&result.SocialMedias).Error
 	if err != nil {
 		return result, err
 	}
 	for r := range result.SocialMedias {
-		err = database.Database.DB.Table("users").Where("id = ?", result.SocialMedias[r].UserId).Where("deleted_at IS NULL").Scan(&result.SocialMedias[r].User).Error
+		err = database.Database.DB.Table("users").Where("id = ?", result.SocialMedias[r].UserId).Scan(&result.SocialMedias[r].User).Error
 		if err != nil {
 			return result, err
 		}
@@ -39,11 +39,11 @@ func (s *SocialMediaRepository) Get() (domain.RespGetSocialMedia, error) {
 
 func (s *SocialMediaRepository) Update(socialMedia domain.SocialMedia) (domain.RespUpdateSocialMedia, error) {
 	result := domain.RespUpdateSocialMedia{}
-	err := database.Database.DB.Table("social_medias").Where("id = ?", socialMedia.ID).Where("deleted_at IS NULL").Updates(&socialMedia).Error
+	err := database.Database.DB.Table("social_media").Where("id = ?", socialMedia.ID).Where("deleted_at IS NULL").Updates(&socialMedia).Error
 	if err != nil {
 		return result, err
 	}
-	err = database.Database.DB.Table("social_medias").Where("id = ?", socialMedia.ID).Where("deleted_at IS NULL").First(&result).Error
+	err = database.Database.DB.Table("social_media").Where("id = ?", socialMedia.ID).Where("deleted_at IS NULL").First(&result).Error
 	if err != nil {
 		return result, err
 	}

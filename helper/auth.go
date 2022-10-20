@@ -9,14 +9,21 @@ import (
 	"github.com/joho/godotenv"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type Auth struct {
 }
 
 func (a *Auth) Auth(c *gin.Context) {
-	tokenString := c.Request.Header.Get("Authorization")
-
+	stringToken := c.Request.Header.Get("Authorization")
+	bearer := strings.HasPrefix(stringToken, "Bearer ")
+	if !bearer {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.Abort()
+		return
+	}
+	tokenString := strings.Split(stringToken, " ")[1]
 	err := godotenv.Load("../MyGram/database/.env")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -33,11 +40,7 @@ func (a *Auth) Auth(c *gin.Context) {
 	if token != nil && err == nil {
 		session := sessions.Default(c)
 		session.Set("claims", token.Claims)
-		err = session.Save()
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
+		session.Save()
 		c.Next()
 	} else {
 		result := domain.Response{}
