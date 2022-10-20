@@ -7,11 +7,11 @@ import (
 
 type Comment struct {
 	gorm.Model
-	UserID  uint   `form:"user_id"`
-	PhotoID uint   `form:"photo_id"`
-	Message string `form:"message"`
-	User    User   `gorm:"foreignkey:UserID"`
-	Photo   Photo  `gorm:"foreignkey:PhotoID"`
+	UserID  *uint  `json:"user_id"`
+	PhotoID *uint  `json:"photo_id"`
+	Message string `json:"message" gorm:"not null"`
+	User    *User  `gorm:"foreignkey:UserID"`
+	Photo   *Photo `gorm:"foreignkey:PhotoID"`
 }
 
 func (comment Comment) Validate() error {

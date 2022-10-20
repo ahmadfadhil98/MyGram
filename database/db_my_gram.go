@@ -1,4 +1,4 @@
-package infrastructure
+package database
 
 import (
 	"MyGram/domain"
@@ -8,14 +8,14 @@ import (
 	"os"
 )
 
-var Database SqlHandler
+var Database DBMyGram
 
-type SqlHandler struct {
+type DBMyGram struct {
 	DB *gorm.DB
 }
 
-func (dbs *SqlHandler) DBInit() error {
-	err := godotenv.Load("../MyGram/app/.env")
+func (dbs *DBMyGram) DBInit() error {
+	err := godotenv.Load("../MyGram/database/.env")
 	dataSourceName := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s", os.Getenv("DB_HOST"), os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_DATABASE"), os.Getenv("DB_PORT"))
 	fmt.Println(dataSourceName)
 	db, err := gorm.Open("postgres", dataSourceName)

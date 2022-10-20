@@ -7,11 +7,11 @@ import (
 
 type Photo struct {
 	gorm.Model
-	Title    string `form:"title"`
-	Caption  string `form:"caption"`
-	PhotoUrl string `form:"photo_url"`
-	UserId   uint   `form:"user_id"`
-	User     User   `gorm:"foreignkey:UserId"`
+	Title    string  `json:"title" gorm:"type:varchar(100);not null"`
+	Caption  *string `json:"caption" gorm:"type:varchar(100)"`
+	PhotoUrl string  `json:"photo_url" gorm:"not null"`
+	UserId   *uint   `json:"user_id"`
+	User     *User   `gorm:"foreignkey:UserId"`
 }
 
 func (photo Photo) Validate() error {

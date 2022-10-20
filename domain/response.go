@@ -2,19 +2,14 @@ package domain
 
 type Response struct {
 	Status int         `json:"status"`
-	Body   interface{} `json:"body"`
+	Data   interface{} `json:"data"`
 }
 
 type RespRegister struct {
 	Age      int    `json:"age"`
 	Email    string `json:"email"`
-	Id       uint   `json:"id"`
+	Id       int    `json:"id"`
 	Username string `json:"username"`
-}
-
-type ReqLogin struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
 }
 
 type RespLogin struct {
@@ -129,7 +124,7 @@ type RespGetSocialMediaUserItem struct {
 }
 
 type RespGetSocialMedia struct {
-	SosialMedias []RespGetSocialMediaUserItem `json:"sosial_medias"`
+	SocialMedias []RespGetSocialMediaUserItem `json:"social_medias"`
 }
 
 type RespUpdateSocialMedia struct {

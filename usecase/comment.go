@@ -4,127 +4,125 @@ import (
 	"MyGram/domain"
 	"MyGram/helper"
 	"MyGram/repository"
+	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"strconv"
 )
 
-type UserUsecase struct {
-	userRepo repository.UserRepository
-	jwt      helper.Jwt
+type CommentUsecase struct {
+	commentRepo repository.CommentRepository
+	photoRepo   repository.PhotoRepository
+	jwt         helper.Jwt
 }
 
-func (u *UserUsecase) Register(c *gin.Context) {
-	var user domain.User
+func (cu *CommentUsecase) Create(c *gin.Context) {
+	var comment domain.Comment
 	var response domain.Response
-	err := c.ShouldBindJSON(&user)
+	err := c.ShouldBindJSON(&comment)
 	if err != nil {
 		response.Status = http.StatusBadRequest
 		response.Data = gin.H{"error": err.Error()}
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	err = user.Validate()
+	err = comment.Validate()
 	if err != nil {
 		response.Status = http.StatusBadRequest
 		response.Data = gin.H{"error": err.Error()}
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(*user.Password), bcrypt.DefaultCost)
+	photoId := int(*comment.PhotoID)
+	fmt.Println(photoId)
+	photo, err := cu.photoRepo.GetById(photoId)
 	if err != nil {
 		response.Status = http.StatusInternalServerError
 		response.Data = gin.H{"error": err.Error()}
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
-	*user.Password = string(hashedPassword)
-	result, err := u.userRepo.Register(user)
-	if err != nil {
-		response.Status = http.StatusInternalServerError
-		response.Data = gin.H{"error": err.Error()}
-		c.JSON(http.StatusInternalServerError, response)
+	if len(photo) == 0 {
+		response.Status = http.StatusBadRequest
+		response.Data = gin.H{"error": "Photo ID not found"}
+		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	response.Status = http.StatusCreated
-	response.Data = result
-	c.JSON(http.StatusCreated, response)
-}
-
-func (u *UserUsecase) Login(c *gin.Context) {
-	var user domain.User
-	var result domain.RespLogin
-	var response domain.Response
-	err := godotenv.Load("../MyGram/database/.env")
-	if err != nil {
-		response.Status = http.StatusInternalServerError
-		response.Data = gin.H{"error": err.Error()}
-		c.JSON(http.StatusInternalServerError, response)
-		return
-	}
-	err = c.ShouldBindJSON(&user)
+	sesi := sessions.Default(c)
+	akses, data, err := cu.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusBadRequest
 		response.Data = gin.H{"error": err.Error()}
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	exist, resp, err := u.userRepo.Login(user)
-	if err != nil {
-		response.Status = http.StatusInternalServerError
-		response.Data = gin.H{"error": err.Error()}
-		c.JSON(http.StatusInternalServerError, response)
-		return
-	}
-	if exist {
-		err = bcrypt.CompareHashAndPassword([]byte(*resp.Password), []byte(*user.Password))
-		if err != nil {
-			response.Status = http.StatusUnauthorized
-			response.Data = gin.H{"error": "Password is wrong"}
-			c.JSON(http.StatusUnauthorized, response)
-			return
-		}
-		token, err := u.jwt.GetToken(resp.ID)
+	if akses {
+		comment.UserID = new(uint)
+		*comment.UserID = uint(data.Client_Id)
+		result, err := cu.commentRepo.Create(comment)
 		if err != nil {
 			response.Status = http.StatusInternalServerError
 			response.Data = gin.H{"error": err.Error()}
 			c.JSON(http.StatusInternalServerError, response)
 			return
 		}
-		result.Token = token
+		response.Status = http.StatusCreated
+		response.Data = result
+		c.JSON(http.StatusCreated, response)
 	}
-	response.Status = http.StatusOK
-	response.Data = result
-	c.JSON(http.StatusOK, response)
 }
 
-func (u *UserUsecase) Update(c *gin.Context) {
-	var user domain.User
+func (cu *CommentUsecase) Get(c *gin.Context) {
 	var response domain.Response
-	err := c.ShouldBindJSON(&user)
+	sesi := sessions.Default(c)
+	akses, _, err := cu.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusBadRequest
 		response.Data = gin.H{"error": err.Error()}
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	id := c.Param("userId")
-	u64, _ := strconv.ParseUint(id, 10, 32)
-	user.ID = uint(u64)
-	sesi := sessions.Default(c)
-	akses, data, err := u.jwt.CheckToken(sesi)
+	if akses {
+		result, err := cu.commentRepo.Get()
+		if err != nil {
+			response.Status = http.StatusInternalServerError
+			response.Data = gin.H{"error": err.Error()}
+			c.JSON(http.StatusInternalServerError, response)
+			return
+		}
+		response.Status = http.StatusOK
+		response.Data = result
+		c.JSON(http.StatusOK, response)
+	}
+}
+
+func (cu *CommentUsecase) Update(c *gin.Context) {
+	var comment domain.Comment
+	var response domain.Response
+	err := c.ShouldBindJSON(&comment)
 	if err != nil {
-		response.Status = http.StatusInternalServerError
+		response.Status = http.StatusBadRequest
 		response.Data = gin.H{"error": err.Error()}
-		c.JSON(http.StatusInternalServerError, response)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	id := c.Param("commentId")
+	u64, _ := strconv.ParseUint(id, 10, 32)
+	comment.ID = uint(u64)
+	sesi := sessions.Default(c)
+	akses, data, err := cu.jwt.CheckToken(sesi)
+	if err != nil {
+		response.Status = http.StatusBadRequest
+		response.Data = gin.H{"error": err.Error()}
+		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 	if akses {
-		user.ID = uint(data.Client_Id)
-		result, err := u.userRepo.Update(user)
+		comment.UserID = new(uint)
+		*comment.UserID = uint(data.Client_Id)
+		fmt.Println(comment)
+		result, err := cu.commentRepo.Update(comment)
 		if err != nil {
 			response.Status = http.StatusInternalServerError
 			response.Data = gin.H{"error": err.Error()}
@@ -138,10 +136,18 @@ func (u *UserUsecase) Update(c *gin.Context) {
 
 }
 
-func (u *UserUsecase) Delete(c *gin.Context) {
+func (cu *CommentUsecase) Delete(c *gin.Context) {
 	var response domain.Response
+	id := c.Param("commentId")
+	commentId, err := strconv.Atoi(id)
+	if err != nil {
+		response.Status = http.StatusBadRequest
+		response.Data = gin.H{"error": err.Error()}
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
 	sesi := sessions.Default(c)
-	akses, dataAkses, err := u.jwt.CheckToken(sesi)
+	akses, _, err := cu.jwt.CheckToken(sesi)
 	if err != nil {
 		response.Status = http.StatusInternalServerError
 		response.Data = gin.H{"error": err.Error()}
@@ -149,7 +155,7 @@ func (u *UserUsecase) Delete(c *gin.Context) {
 		return
 	}
 	if akses {
-		success, err := u.userRepo.Delete(dataAkses.Client_Id)
+		success, err := cu.commentRepo.Delete(commentId)
 		if err != nil {
 			response.Status = http.StatusInternalServerError
 			response.Data = gin.H{"error": err.Error()}
@@ -158,7 +164,7 @@ func (u *UserUsecase) Delete(c *gin.Context) {
 		}
 		if success {
 			response.Status = http.StatusOK
-			response.Data = gin.H{"message": "Your account has been successfully deleted"}
+			response.Data = gin.H{"message": "Your comment has been successfully deleted"}
 			c.JSON(http.StatusOK, response)
 			return
 		}
