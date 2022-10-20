@@ -2,8 +2,8 @@ package helper
 
 import (
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-contrib/sessions"
-	"github.com/golang-jwt/jwt"
 	"github.com/mitchellh/mapstructure"
 	"os"
 	"time"
