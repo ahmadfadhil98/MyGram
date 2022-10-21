@@ -2,6 +2,7 @@ package domain
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
 	"github.com/jinzhu/gorm"
 )
 
@@ -16,6 +17,6 @@ type SocialMedia struct {
 func (socialMedia SocialMedia) Validate() error {
 	return validation.ValidateStruct(&socialMedia,
 		validation.Field(&socialMedia.Name, validation.Required),
-		validation.Field(&socialMedia.SocialMediaUrl, validation.Required),
+		validation.Field(&socialMedia.SocialMediaUrl, validation.Required, is.URL),
 	)
 }

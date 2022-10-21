@@ -17,5 +17,6 @@ type Comment struct {
 func (comment Comment) Validate() error {
 	return validation.ValidateStruct(&comment,
 		validation.Field(&comment.Message, validation.Required),
+		validation.Field(&comment.PhotoID, validation.Min(0)),
 	)
 }

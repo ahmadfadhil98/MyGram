@@ -2,6 +2,7 @@ package domain
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
+	"github.com/go-ozzo/ozzo-validation/is"
 	"github.com/jinzhu/gorm"
 )
 
@@ -17,6 +18,6 @@ type Photo struct {
 func (photo Photo) Validate() error {
 	return validation.ValidateStruct(&photo,
 		validation.Field(&photo.Title, validation.Required),
-		validation.Field(&photo.PhotoUrl, validation.Required),
+		validation.Field(&photo.PhotoUrl, validation.Required, is.URL),
 	)
 }

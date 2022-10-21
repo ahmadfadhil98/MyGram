@@ -98,6 +98,13 @@ func (s *SocialMediaUsecase) Update(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	err = socialmedia.Validate()
+	if err != nil {
+		response.Status = http.StatusBadRequest
+		response.Data = gin.H{"error": err.Error()}
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
 	id := c.Param("socialMediaId")
 	u64, _ := strconv.ParseUint(id, 10, 32)
 	socialmedia.ID = uint(u64)
